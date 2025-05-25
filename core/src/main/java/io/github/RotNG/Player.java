@@ -12,6 +12,8 @@ public class Player {
     private Texture texture;
     private float x, y;
 
+    private static final float SCALE = 0.2f; // pomniejszony
+
     public Player() {
         texture = new Texture("Wizard.png");
         x = 0;
@@ -26,7 +28,7 @@ public class Player {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y);
+        batch.draw(texture, x, y, texture.getWidth() * SCALE, texture.getHeight() * SCALE);
     }
 
     public float getX() { return x; }

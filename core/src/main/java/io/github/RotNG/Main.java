@@ -41,7 +41,7 @@ public class Main extends ApplicationAdapter {
 
         //Obsługa fullscreena
         //Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-        //Gdx.graphics.setWindowedMode(displayMode.width - 40, displayMode.height - 100);  //Gdx.graphics.setWindowedMode(displayMode.width - 40, displayMode.height - 100);
+        //Gdx.graphics.setWindowedMode(displayMode.width - 920, displayMode.height - 140);  //Gdx.graphics.setWindowedMode(displayMode.width - 40, displayMode.height - 100);
 
     }
 
@@ -54,9 +54,9 @@ public class Main extends ApplicationAdapter {
 
         //Kamera
         // Ustaw pozycję kamery — gracz jest 1/3 szerokości ekranu od lewej
-        //float offsetX = -Gdx.graphics.getWidth() / 3f;
-        //camera.position.set(player.getX() + offsetX, player.getY(), 0);
-        //camera.update();
+        float offsetX = Gdx.graphics.getWidth() / 10f;
+        camera.position.set(player.getX(), player.getY(), 0);  //  player.getX() + offsetX
+        camera.update();
 
         //macierz kamery
         batch.setProjectionMatrix(camera.combined);
