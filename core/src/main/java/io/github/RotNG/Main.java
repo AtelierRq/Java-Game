@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends ApplicationAdapter {
 
     private SpriteBatch batch;
-    private Texture image;
 
     //Player
     private Player player;
@@ -32,8 +31,8 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         player = new Player();
 
-        //Załadowanie mapy
-        mapTexture = new Texture("mapa.png");
+        //Załadowanie terenu
+        mapTexture = new Texture("grass2.png");
 
         // Inicjalizacja kamery
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -63,7 +62,24 @@ public class Main extends ApplicationAdapter {
 
         //Player i map
         batch.begin();
-        batch.draw(mapTexture, 0, 0);
+
+        //batch.draw(mapTexture, 0, 0);
+
+        //tworzenie mapy nieskonczonej (terenu)
+        int tileSize = mapTexture.getWidth(); // zakładamy kwadrat
+        int drawRadius = 10; // ile kafelków w każdą stronę
+
+        int playerTileX = (int)(player.getX() / tileSize);
+        int playerTileY = (int)(player.getY() / tileSize);
+
+        for (int y = -drawRadius; y <= drawRadius; y++) {
+            for (int x = -drawRadius; x <= drawRadius; x++) {
+                int drawX = (playerTileX + x) * tileSize;
+                int drawY = (playerTileY + y) * tileSize;
+                batch.draw(mapTexture, drawX, drawY);
+            }
+        }
+
         player.render(batch);
         batch.end();
 
@@ -71,7 +87,6 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
         batch.dispose();
         mapTexture.dispose();
         player.dispose();
