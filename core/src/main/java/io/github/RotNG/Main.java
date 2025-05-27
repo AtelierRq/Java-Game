@@ -17,13 +17,10 @@ import java.util.List;
 public class Main extends ApplicationAdapter {
 
     private SpriteBatch batch;
-
     //Player
     private Player player;
-
     //MapTexture
     private Texture mapTexture;
-
     //Camera
     private OrthographicCamera camera;
 
@@ -55,7 +52,7 @@ public class Main extends ApplicationAdapter {
         player.update(Gdx.graphics.getDeltaTime());
 
         //Kamera
-        // Ustaw pozycję kamery — gracz jest 1/3 szerokości ekranu od lewej
+        // Ustaw pozycję kamery — gracz jest danej szerokości szerokości ekranu od lewej
         float offsetX = Gdx.graphics.getWidth() / 10f;
         camera.position.set(player.getX(), player.getY(), 0);  //  player.getX() + offsetX
         camera.update();
@@ -65,8 +62,6 @@ public class Main extends ApplicationAdapter {
 
         //Player i map
         batch.begin();
-
-        //batch.draw(mapTexture, 0, 0);
 
         //tworzenie mapy nieskonczonej (terenu)
         int tileSize = mapTexture.getWidth(); // zakładamy kwadrat

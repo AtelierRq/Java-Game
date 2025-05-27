@@ -15,7 +15,7 @@ public class Player {
     private Texture texture;
     private float x, y;
 
-    private static final float SCALE = 0.2f; // pomniejszony
+    private static final float SCALE = 0.2f; // gracz pomniejszony
 
     public Player() {
         texture = new Texture("Wizard.png");
