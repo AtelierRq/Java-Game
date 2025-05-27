@@ -20,8 +20,7 @@ public class Bullet {
         position = new Vector2(startPos);
         velocity = targetPos.sub(startPos).nor().scl(SPEED);
 
-        bounds = new Rectangle(position.x -50, position.y -50,
-            texture.getWidth(), texture.getHeight());
+        bounds = new Rectangle(position.x -50, position.y -50, texture.getWidth(), texture.getHeight());
     }
 
     public boolean update(float deltaTime) {

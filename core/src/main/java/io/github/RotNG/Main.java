@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -30,6 +31,12 @@ public class Main extends ApplicationAdapter {
     private List<Bullet> bullets;
 
     private Viewport viewport;
+
+    private List<Enemy> enemies;
+    private ShapeRenderer shapeRenderer;
+
+    List<Enemy> toRemove = new ArrayList<>();
+    List<Bullet> bulletsToRemove = new ArrayList<>();
 
     @Override
     public void create() {
@@ -66,6 +73,20 @@ public class Main extends ApplicationAdapter {
         trees.add(new Tree(1100, 160));
 
         bullets = new ArrayList<>();
+
+        enemies = new ArrayList<>();
+        shapeRenderer = new ShapeRenderer();
+
+        // dodawanie kilku przeciwnikow
+        enemies.add(new Enemy(100, 100));
+        enemies.add(new Enemy(-200, -200));
+        enemies.add(new Enemy(300, 0));
+        enemies.add(new Enemy(-600, -100));
+        enemies.add(new Enemy(500, 400));
+        enemies.add(new Enemy(-400, -100));
+        enemies.add(new Enemy(-100, -500));
+        enemies.add(new Enemy(0, 600));
+        enemies.add(new Enemy(400, -400));
     }
 
     @Override
@@ -91,14 +112,43 @@ public class Main extends ApplicationAdapter {
 
         bullets.removeIf(bullet -> !bullet.update(Gdx.graphics.getDeltaTime()));
 
+        for (Enemy enemy : enemies) {enemy.update(Gdx.graphics.getDeltaTime());}
+
         batch.begin();
         drawTiledMap(); // powtarzana trawa
         for (Tree tree : trees) tree.render(batch);
         for (Bullet bullet : bullets) bullet.render(batch);
+        for (Enemy enemy : enemies) enemy.render(batch);
         player.render(batch, camera);
         batch.end();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (Enemy enemy : enemies) enemy.renderHealthBar(shapeRenderer);
+        shapeRenderer.end();
+
+
+        List<Enemy> toRemove = new ArrayList<>();
+
+        for (Bullet bullet : bullets) {
+            for (Enemy enemy : enemies) {
+                if (enemy.overlaps(bullet.getBounds())) {
+                    enemy.hit(); // odejmujemy 1 HP
+                    bulletsToRemove.add(bullet);
+
+                    if (enemy.isDead()) {
+                        toRemove.add(enemy);
+                    }
+                    break;
+                }
+            }
+        }
+
+        bullets.removeAll(bulletsToRemove);
+        enemies.removeAll(toRemove);
     }
 
+    //funkcja generująca trawe
     private void drawTiledMap() {
         int tileSize = mapTexture.getWidth();
         int tilesX = 20;
@@ -117,5 +167,7 @@ public class Main extends ApplicationAdapter {
         player.dispose();
         for (Tree tree : trees) tree.dispose();
         for (Bullet bullet : bullets) bullet.dispose();
+        for (Enemy enemy : enemies) enemy.dispose();
+        shapeRenderer.dispose();
     }
 }
