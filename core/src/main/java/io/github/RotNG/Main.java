@@ -33,9 +33,27 @@ public class Main extends ApplicationAdapter {
 
         // Tworzenie kilku drzew
         trees = new ArrayList<>();
-        trees.add(new Tree(400, 400));
-        trees.add(new Tree(600, 300));
-        trees.add(new Tree(800, 600));
+        trees.add(new Tree(-150, 80));
+        trees.add(new Tree(180, 170));
+        trees.add(new Tree(220, -140));
+        trees.add(new Tree(-300, -250));
+        trees.add(new Tree(-480, 250));
+        trees.add(new Tree(-160, 450));
+        trees.add(new Tree(-660, -100));
+        trees.add(new Tree(0, -500));
+        trees.add(new Tree(700, -330));
+        trees.add(new Tree(560, 150));
+        trees.add(new Tree(340, -540));
+        trees.add(new Tree(-450, -650));
+        trees.add(new Tree(300, 500));
+        trees.add(new Tree(-780, -470));
+        trees.add(new Tree(-570, 710));
+        trees.add(new Tree(-910, 280));
+        trees.add(new Tree(0, 800));
+        trees.add(new Tree(760, 520));
+        trees.add(new Tree(1050, 20));
+        trees.add(new Tree(1100, 160));
+
     }
 
     @Override

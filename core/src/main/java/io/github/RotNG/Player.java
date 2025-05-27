@@ -24,7 +24,7 @@ public class Player {
         texture = new Texture("Wizard.png");
         float width = texture.getWidth() * SCALE;
         float height = texture.getHeight() * SCALE;
-        bounds = new Rectangle(200, 200, width, height);
+        bounds = new Rectangle(0, 0, width, height);
     }
 
     public void update(float deltaTime, List<Tree> obstacles) {
