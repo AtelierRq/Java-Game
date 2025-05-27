@@ -13,74 +13,57 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-
     private SpriteBatch batch;
-    //Player
-    private Player player;
-    //MapTexture
-    private Texture mapTexture;
-    //Camera
     private OrthographicCamera camera;
+
+    private Texture mapTexture;
+    private Player player;
+
+    private List<Tree> trees;
 
     @Override
     public void create() {
-
-        //Player
         batch = new SpriteBatch();
-        player = new Player();
-
-        //Załadowanie terenu
-        mapTexture = new Texture("grass2.png");
-
-        // Inicjalizacja kamery
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
 
-        //Obsługa fullscreena
-        //Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-        //Gdx.graphics.setWindowedMode(displayMode.width - 920, displayMode.height - 140);  //Gdx.graphics.setWindowedMode(displayMode.width - 40, displayMode.height - 100);
+        mapTexture = new Texture("grass2.png");
+        player = new Player();
 
+        // Tworzenie kilku drzew
+        trees = new ArrayList<>();
+        trees.add(new Tree(400, 400));
+        trees.add(new Tree(600, 300));
+        trees.add(new Tree(800, 600));
     }
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1);
 
-        //Player i Map
-        player.update(Gdx.graphics.getDeltaTime());
+        player.update(Gdx.graphics.getDeltaTime(), trees);
 
-        //Kamera
-        // Ustaw pozycję kamery — gracz jest danej szerokości szerokości ekranu od lewej
-        float offsetX = Gdx.graphics.getWidth() / 10f;
-        camera.position.set(player.getX(), player.getY(), 0);  //  player.getX() + offsetX
+        camera.position.set(player.getX(), player.getY(), 0);
         camera.update();
-
-        //macierz kamery
         batch.setProjectionMatrix(camera.combined);
 
-        //Player i map
         batch.begin();
+        drawTiledMap(); // powtarzana trawa
+        for (Tree tree : trees) tree.render(batch);
+        player.render(batch, camera);
+        batch.end();
+    }
 
-        //tworzenie mapy nieskonczonej (terenu)
-        int tileSize = mapTexture.getWidth(); // zakładamy kwadrat
-        int drawRadius = 10; // ile kafelków w każdą stronę
-
-        int playerTileX = (int)(player.getX() / tileSize);
-        int playerTileY = (int)(player.getY() / tileSize);
-
-        for (int y = -drawRadius; y <= drawRadius; y++) {
-            for (int x = -drawRadius; x <= drawRadius; x++) {
-                int drawX = (playerTileX + x) * tileSize;
-                int drawY = (playerTileY + y) * tileSize;
-                batch.draw(mapTexture, drawX, drawY);
+    private void drawTiledMap() {
+        int tileSize = mapTexture.getWidth();
+        int tilesX = 20;
+        int tilesY = 20;
+        for (int y = -tilesY / 2; y < tilesY / 2; y++) {
+            for (int x = -tilesX / 2; x < tilesX / 2; x++) {
+                batch.draw(mapTexture, x * tileSize, y * tileSize);
             }
         }
-
-        player.render(batch);
-        batch.end();
-
     }
 
     @Override
@@ -88,5 +71,6 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         mapTexture.dispose();
         player.dispose();
+        for (Tree tree : trees) tree.dispose();
     }
 }

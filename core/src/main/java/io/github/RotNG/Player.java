@@ -15,29 +15,45 @@ import java.util.List;
 
 public class Player {
     private Texture texture;
-    private float x, y;
+    private Rectangle bounds;
 
-    private static final float SCALE = 0.2f; // gracz pomniejszony
+    private static final float SPEED = 200;
+    private static final float SCALE = 0.5f;
 
     public Player() {
         texture = new Texture("Wizard.png");
-        x = 0;
-        y = 0;
+        float width = texture.getWidth() * SCALE;
+        float height = texture.getHeight() * SCALE;
+        bounds = new Rectangle(200, 200, width, height);
     }
 
-    public void update(float deltaTime) {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) y += 200 * deltaTime;
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) y -= 200 * deltaTime;
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) x -= 200 * deltaTime;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) x += 200 * deltaTime;
+    public void update(float deltaTime, List<Tree> obstacles) {
+        float oldX = bounds.x;
+        float oldY = bounds.y;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) bounds.y += SPEED * deltaTime;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) bounds.y -= SPEED * deltaTime;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) bounds.x -= SPEED * deltaTime;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) bounds.x += SPEED * deltaTime;
+
+        // Sprawdzenie kolizji
+        for (Tree tree : obstacles) {
+            if (bounds.overlaps(tree.getBounds())) {
+                bounds.x = oldX;
+                bounds.y = oldY;
+                break;
+            }
+        }
     }
 
-    public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, texture.getWidth() * SCALE, texture.getHeight() * SCALE);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        float screenX = bounds.x;
+        float screenY = bounds.y;
+        batch.draw(texture, screenX, screenY, bounds.width * SCALE, bounds.height * SCALE);
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
+    public float getX() { return bounds.x + bounds.width / 2; }
+    public float getY() { return bounds.y + bounds.height / 2; }
 
     public void dispose() {
         texture.dispose();
