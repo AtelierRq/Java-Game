@@ -8,10 +8,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -22,11 +27,17 @@ public class Main extends ApplicationAdapter {
 
     private List<Tree> trees;
 
+    private List<Bullet> bullets;
+
+    private Viewport viewport;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        viewport.apply();
 
         mapTexture = new Texture("grass2.png");
         player = new Player();
@@ -54,6 +65,12 @@ public class Main extends ApplicationAdapter {
         trees.add(new Tree(1050, 20));
         trees.add(new Tree(1100, 160));
 
+        bullets = new ArrayList<>();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
     }
 
     @Override
@@ -66,9 +83,18 @@ public class Main extends ApplicationAdapter {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
+        if (Gdx.input.justTouched()) {
+            Vector2 worldClick = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+            Vector2 startPos = new Vector2(player.getX(), player.getY());
+            bullets.add(new Bullet(startPos, worldClick));
+        }
+
+        bullets.removeIf(bullet -> !bullet.update(Gdx.graphics.getDeltaTime()));
+
         batch.begin();
         drawTiledMap(); // powtarzana trawa
         for (Tree tree : trees) tree.render(batch);
+        for (Bullet bullet : bullets) bullet.render(batch);
         player.render(batch, camera);
         batch.end();
     }
@@ -90,5 +116,6 @@ public class Main extends ApplicationAdapter {
         mapTexture.dispose();
         player.dispose();
         for (Tree tree : trees) tree.dispose();
+        for (Bullet bullet : bullets) bullet.dispose();
     }
 }
