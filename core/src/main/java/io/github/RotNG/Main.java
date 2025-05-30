@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,6 +47,9 @@ public class Main extends ApplicationAdapter {
     private float titleAlpha = 1f;
     private float titleTimer = 0f;
     private boolean showTitle = true;
+
+    private Sound victorySound;
+    private boolean victorySoundPlayed = false;
 
     @Override
     public void create() {
@@ -104,6 +108,8 @@ public class Main extends ApplicationAdapter {
         backgroundMusic.play();               // start
 
         titleTexture = new Texture("title.png");
+
+        victorySound = Gdx.audio.newSound(Gdx.files.internal("victory.wav"));
     }
 
 
@@ -131,6 +137,14 @@ public class Main extends ApplicationAdapter {
         bullets.removeIf(bullet -> !bullet.update(Gdx.graphics.getDeltaTime()));
 
         for (Enemy enemy : enemies) {enemy.update(Gdx.graphics.getDeltaTime());}
+
+        //jeśli wszyscy przeciwnicy nie żyją to victory sound
+        if(enemies.isEmpty()) {
+            if (!victorySoundPlayed) {
+                victorySound.play();
+                victorySoundPlayed = true;
+            }
+        }
 
         batch.begin();
 
@@ -212,5 +226,6 @@ public class Main extends ApplicationAdapter {
         shapeRenderer.dispose();
         backgroundMusic.dispose();
         titleTexture.dispose();
+        victorySound.dispose();
     }
 }
