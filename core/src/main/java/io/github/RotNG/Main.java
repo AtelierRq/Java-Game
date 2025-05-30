@@ -107,7 +107,7 @@ public class Main extends ApplicationAdapter {
         backgroundMusic.setVolume(0.8f);      // głośność od 0.0 do 1.0
         backgroundMusic.play();               // start
 
-        titleTexture = new Texture("title.png");
+        titleTexture = new Texture("title2.png");
 
         victorySound = Gdx.audio.newSound(Gdx.files.internal("victory.wav"));
     }
@@ -170,7 +170,7 @@ public class Main extends ApplicationAdapter {
 
             float x = (Gdx.graphics.getWidth() - titleTexture.getWidth()) / 2f;
             float y = (Gdx.graphics.getHeight() - titleTexture.getHeight()) / 2f;
-            batch.draw(titleTexture, x - 300, y -200);
+            batch.draw(titleTexture, x - 300, y -220);
 
             batch.setColor(1f, 1f, 1f, 1f); // reset koloru na domyślny
         }
