@@ -15,6 +15,7 @@ import java.util.List;
 
 
 public class Player {
+    //składowe
     private static final float SPEED = 200;
     private static final float SCALE = 0.5f;
 
@@ -31,6 +32,7 @@ public class Player {
 
     public Player() {
 
+        //tablica obslugująca animację ruchu gracza w czterech kierunkach
         animations = new TextureRegion[4][2]; // [kierunek][klatka]
         animations[0][0] = new TextureRegion(new Texture("wizard_up1.png"));
         animations[0][1] = new TextureRegion(new Texture("wizard_up2.png"));
@@ -43,6 +45,7 @@ public class Player {
 
         currentFrame = animations[1][0]; // domyślnie w dół
 
+        //wymiary i hitbox
         float width = currentFrame.getRegionWidth() * SCALE;
         float height = currentFrame.getRegionHeight() * SCALE;
         bounds = new Rectangle(0, 0, width, height);
@@ -54,7 +57,7 @@ public class Player {
 
         boolean moved = false;
 
-
+        //sprawdzanie który przycisk jest wciśnięty i aktualizacja wymiarów gracza na tej podstawie
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             bounds.y += SPEED * deltaTime;
             currentDirection = Direction.UP;
@@ -73,7 +76,7 @@ public class Player {
             moved = true;
         }
 
-        // Sprawdzenie kolizji
+        // Sprawdzenie kolizji z drzewami
         for (Tree tree : obstacles) {
             if (bounds.overlaps(tree.getBounds())) {
                 bounds.x = oldX;
@@ -82,7 +85,7 @@ public class Player {
             }
         }
 
-        // Animacja
+        // Odpowiada ze przełącznie między klatkami podczas ruchu
         if (moved) {
             animationTimer += deltaTime;
             if (animationTimer >= frameDuration) {
@@ -93,6 +96,7 @@ public class Player {
             currentFrameIndex = 0; // jeśli stoi, to 1. klatka
         }
 
+        //wybór odpowiedniego zestawu klatek w zależności od tego, w którą stronę porusza się gracz
         int dirIndex;
         switch (currentDirection) {
             case UP:
@@ -115,17 +119,22 @@ public class Player {
         currentFrame = animations[dirIndex][currentFrameIndex];
     }
 
+    //renderowanie gracza i przeskalowanie go
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         batch.draw(currentFrame, bounds.x, bounds.y, bounds.width * SCALE, bounds.height * SCALE);
     }
 
+
+    //metody pomocnicze, zawierające środek postaci gracza
     public float getX() { return bounds.x + bounds.width / 2; }
     public float getY() { return bounds.y + bounds.height / 2; }
 
+    //getter
     public Rectangle getBounds() {
         return bounds;
     }
 
+    //usuwanie zasobów
     public void dispose() {
         // Zakładamy, że każda klatka to osobna tekstura
         for (TextureRegion[] dir : animations)
