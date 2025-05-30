@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,6 +38,13 @@ public class Main extends ApplicationAdapter {
 
     List<Enemy> toRemove = new ArrayList<>();
     List<Bullet> bulletsToRemove = new ArrayList<>();
+
+    private Music backgroundMusic;
+
+    private Texture titleTexture;
+    private float titleAlpha = 1f;
+    private float titleTimer = 0f;
+    private boolean showTitle = true;
 
     @Override
     public void create() {
@@ -78,7 +86,7 @@ public class Main extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
 
         // dodawanie kilku przeciwnikow
-        enemies.add(new Enemy(100, 100));
+        enemies.add(new Enemy(0, 200));
         enemies.add(new Enemy(-200, -200));
         enemies.add(new Enemy(300, 0));
         enemies.add(new Enemy(-600, -100));
@@ -87,7 +95,16 @@ public class Main extends ApplicationAdapter {
         enemies.add(new Enemy(-100, -500));
         enemies.add(new Enemy(0, 600));
         enemies.add(new Enemy(400, -400));
+
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        backgroundMusic.setLooping(true);     // zapętlenie
+        backgroundMusic.setVolume(0.8f);      // głośność od 0.0 do 1.0
+        backgroundMusic.play();               // start
+
+        titleTexture = new Texture("title.png");
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -115,11 +132,34 @@ public class Main extends ApplicationAdapter {
         for (Enemy enemy : enemies) {enemy.update(Gdx.graphics.getDeltaTime());}
 
         batch.begin();
+
         drawTiledMap(); // powtarzana trawa
         for (Tree tree : trees) tree.render(batch);
         for (Bullet bullet : bullets) bullet.render(batch);
         for (Enemy enemy : enemies) enemy.render(batch);
         player.render(batch, camera);
+
+        //rysowanie title screena
+        if (showTitle) {
+            titleTimer += Gdx.graphics.getDeltaTime();
+
+            if (titleTimer > 1f && titleTimer <= 3f) {
+                // Stopniowo zmniejsz alpha (od 1.0 do 0.0 przez 2 sekundy)
+                titleAlpha = 1f - (titleTimer - 1f) / 2f;
+            } else if (titleTimer > 3f) {
+                showTitle = false;
+                titleAlpha = 0f;
+            }
+
+            batch.setColor(1f, 1f, 1f, titleAlpha);
+
+            float x = (Gdx.graphics.getWidth() - titleTexture.getWidth()) / 2f;
+            float y = (Gdx.graphics.getHeight() - titleTexture.getHeight()) / 2f;
+            batch.draw(titleTexture, x - 300, y -200);
+
+            batch.setColor(1f, 1f, 1f, 1f); // reset koloru na domyślny
+        }
+
         batch.end();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -169,5 +209,7 @@ public class Main extends ApplicationAdapter {
         for (Bullet bullet : bullets) bullet.dispose();
         for (Enemy enemy : enemies) enemy.dispose();
         shapeRenderer.dispose();
+        backgroundMusic.dispose();
+        titleTexture.dispose();
     }
 }
