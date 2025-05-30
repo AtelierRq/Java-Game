@@ -46,7 +46,7 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         viewport.apply();
 
-        mapTexture = new Texture("grass2.png");
+        mapTexture = new Texture("grass4.png");
         player = new Player();
 
         // Tworzenie kilku drzew
