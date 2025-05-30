@@ -21,6 +21,7 @@ public class Enemy {
     public Enemy(float x, float y) {
         texture = new Texture("enemy4.png");
         bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
+
         hp = MAX_HP;
         direction = new Vector2(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f)).nor();
     }
