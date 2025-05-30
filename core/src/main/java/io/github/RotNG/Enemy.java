@@ -84,7 +84,7 @@ public class Enemy {
         return bounds;
     }
 
-    //sparwdzanie czy hitboxy pocisków i przeciwników na siebie nachodzą
+    //sprawdzanie czy hitboxy pocisków i przeciwników na siebie nachodzą
     public boolean overlaps(Rectangle bulletHitbox) {
         return bounds.overlaps(bulletHitbox);
     }
