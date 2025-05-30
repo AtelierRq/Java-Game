@@ -18,8 +18,19 @@ public class Enemy {
     private float moveTimer = 0f;
     private Vector2 direction;
 
+    private static final String[] TEXTURE_PATHS = {
+        "enemy4.png",
+        "enemy5.png",
+        "enemy6.png",
+        "enemy7.png"
+    };
+
     public Enemy(float x, float y) {
-        texture = new Texture("enemy4.png");
+
+        //ładowanie losowej tekstury do przeciwnikow (jednej z 4)
+        String path = TEXTURE_PATHS[MathUtils.random(TEXTURE_PATHS.length - 1)];
+        texture = new Texture(path);
+
         bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
 
         hp = MAX_HP;

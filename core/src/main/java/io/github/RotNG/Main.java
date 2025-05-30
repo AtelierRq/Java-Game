@@ -41,6 +41,7 @@ public class Main extends ApplicationAdapter {
 
     private Music backgroundMusic;
 
+    //tekstury do grafiki tytułowej
     private Texture titleTexture;
     private float titleAlpha = 1f;
     private float titleTimer = 0f;
